@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="layout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="layout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Bàn Số</th>
+                                        <th scope="col">Ngày Đặt</th>
+                                        <th scope="col">Trạng Thái Thanh Toán</th>
+                                        <th scope="col">Trạng Thái Phục Vụ</th>
+                                        <th scope="col">Chi Tiết</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${invoices}">
+                                        <td th:text="${item.idTable}"></td>
+                                        <td th:text="${item.issueDate}"></td>
+                                        <td>
+                                            <span th:if="${item.statusPay==0}" class="text-danger">chưa thanh
+                                                toán</span>
+                                            <span th:if="${item.statusPay==1}" class="text-success">đã thanh toán</span>
+                                        </td>
+                                        <td>
+                                            <span th:if="${item.statusService==0}" class="text-success">chưa phục
+                                                vụ</span>
+                                            <span th:if="${item.statusService==1}" class="text-danger">đã phục vụ</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success">Chi tiết</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/sidebarmenu.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
+        <script src="/libs/simplebar/dist/simplebar.js"></script>
+        <script src="/js/dashboard.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.2/dist/sockjs.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/stomp.js@2.3.3/stomp.min.js"></script>
+        <script>
+            var stompClient = Stomp.over(new SockJS('/ws-example')); // Sửa '/ws-example' dựa trên cấu hình WebSocket của bạn
+
+            stompClient.connect({}, function(frame) {
+                stompClient.subscribe('/topic/new-order', function(message) {
+                    // Xử lý thông báo về đơn hàng mới
+                    // Ví dụ: Cập nhật danh sách đơn hàng trên giao diện
+                    location.reload();
+                });
+            });
+        </script>
+
+
+</body>
+
+</html>
