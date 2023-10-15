@@ -14,12 +14,12 @@
 <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <!-- Sidebar Start -->
-        <div th:replace="layout :: sidebar"></div>
+        <div th:replace="stafflayout :: sidebar"></div>
         <!--  Sidebar End -->
         <!--  Main wrapper -->
         <div class="body-wrapper">
             <!--  Header Start -->
-            <div th:replace="layout :: header"></div>
+            <div th:replace="stafflayout :: header"></div>
 
             <!--  Header End -->
             <div class="container-fluid">
@@ -47,12 +47,14 @@
                                             <span th:if="${item.statusPay==1}" class="text-success">đã thanh toán</span>
                                         </td>
                                         <td>
-                                            <span th:if="${item.statusService==0}" class="text-success">chưa phục
-                                                vụ</span>
-                                            <span th:if="${item.statusService==1}" class="text-danger">đã phục vụ</span>
+                                            <span th:if="${item.statusService==0}" class="text-success">chờ xác nhận từ nhà bếp</span>
+                                            <span th:if="${item.statusService==1}" class="text-danger">đang chế biến món ăn</span>
+                                            <span th:if="${item.statusService==2}" class="text-success">món ăn đã xong</span>
+                                            <span th:if="${item.statusService==3}" class="text-danger">đã phục vụ</span>
+                                            <span th:if="${item.statusService==4}" class="text-success">nhà bếp từ chối đơn</span>
                                         </td>
                                         <td>
-                                            <button class="btn btn-success">Chi tiết</button>
+                                            <a class="btn btn-success" href="" th:href="@{/staff/detailtable/{id} (id=${item.id})}">Chi tiết</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -70,15 +72,15 @@
         <script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
         <script src="/libs/simplebar/dist/simplebar.js"></script>
         <script src="/js/dashboard.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.2/dist/sockjs.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/stomp.js@2.3.3/stomp.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
         <script>
-            var stompClient = Stomp.over(new SockJS('/ws-example')); // Sửa '/ws-example' dựa trên cấu hình WebSocket của bạn
+            var socket = new SockJS('/ws-example'); // Kết nối đến WebSocket endpoint
+            var stompClient = Stomp.over(socket);
 
             stompClient.connect({}, function(frame) {
                 stompClient.subscribe('/topic/new-order', function(message) {
-                    // Xử lý thông báo về đơn hàng mới
-                    // Ví dụ: Cập nhật danh sách đơn hàng trên giao diện
+                    // Hiển thị thông báo
                     location.reload();
                 });
             });

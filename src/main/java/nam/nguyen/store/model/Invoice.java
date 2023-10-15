@@ -22,13 +22,6 @@ public class Invoice {
     private Integer idTable;
     private Integer statusPay;
     private Integer statusService;
-    public long sumPriceInvoice(){
-        long sum = 0;
-        for ( InvoiceProduct i:invoiceProducts) {
-            sum+=i.sumPrice();
-        }
-        return sum;
-    }
     public Invoice() {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");

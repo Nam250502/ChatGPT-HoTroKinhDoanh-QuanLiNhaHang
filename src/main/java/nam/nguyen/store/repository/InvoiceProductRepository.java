@@ -1,6 +1,5 @@
 package nam.nguyen.store.repository;
 
-import nam.nguyen.store.model.CartItem;
 import nam.nguyen.store.model.InvoiceProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

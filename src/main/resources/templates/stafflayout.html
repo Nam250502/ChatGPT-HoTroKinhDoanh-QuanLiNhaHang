@@ -28,7 +28,7 @@
                             <span class="hide-menu">Home</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="/customer/home" aria-expanded="false">
+                            <a class="sidebar-link" href="/staff/home" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
@@ -40,19 +40,19 @@
                             <span class="hide-menu">UI COMPONENTS</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="/customer/viewmenu" aria-expanded="false">
+                            <a class="sidebar-link" href="/staff/home" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-article"></i>
                                 </span>
-                                <span class="hide-menu">Menu Món </span>
+                                <span class="hide-menu">Danh Sách Hóa Đơn </span>
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
+                            <a class="sidebar-link" href="/staff/viewmenu" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-alert-circle"></i>
                                 </span>
-                                <span class="hide-menu">Alerts</span>
+                                <span class="hide-menu">Danh Sách Món</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -212,7 +212,7 @@
                     <div class="card-body">
                         <h5 class="card-title" th:text="${item.name}">Special title treatment</h5>
                         <p class="card-text" th:text="${item.description}">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" th:href="@{/customer/home}" class="btn btn-outline-primary m-1">Đặt Món</a>
+                        <a href="#" th:href="@{/staff/editfood/{id} (id=${item.id})}" class="btn btn-outline-primary m-1">Chỉnh Sửa</a>
 
                     </div>
                 </div>
@@ -220,6 +220,54 @@
 
         </div>
     </div>
+
+    <div th:fragment="editfood">
+        <form action="/staff/updatefood" method="post" enctype="multipart/form-data">
+            <div class="row">
+
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <img th:src="${food.url}" id="previewImage" alt="" style="height: 170px; width: 340px;">
+                                <input type="file" class="form-control" id="url" name="file" accept="image/*" onchange="previewFile()">
+                                <input type="hidden" class="form-control" id="url" name="url" th:value="${food.url}">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <input type="hidden" th:value="${food.id}" name="id">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" th:value="${food.name}" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" id="description" name="description" th:text="${food.description}"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="price">Price</label>
+                                <input type="text" class="form-control" id="price" th:value="${food.price}" name="price">
+                            </div>
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select class="form-control" id="category" name="category">
+                                <option th:each="c : ${category}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id == food.category.id}"></option>
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Food</button>
+                </div>
+            </div>
+    </div>
+    </form>
+
 </body>
 
 </html>l

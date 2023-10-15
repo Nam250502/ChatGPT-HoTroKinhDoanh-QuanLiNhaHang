@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" type="image/png" href="/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid">
+                <div th:replace="stafflayout :: table"></div>
+                <div th:replace="stafflayout :: product"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

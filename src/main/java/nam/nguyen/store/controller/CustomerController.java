@@ -2,23 +2,15 @@ package nam.nguyen.store.controller;
 
 import nam.nguyen.store.model.CartItem;
 import nam.nguyen.store.model.Invoice;
-import nam.nguyen.store.model.InvoiceProduct;
 import nam.nguyen.store.model.Product;
 import nam.nguyen.store.repository.CategoryRepository;
 import nam.nguyen.store.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -28,6 +20,8 @@ public class CustomerController {
     private ProductService productService;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private CartService cartService;
     @Autowired
     private CartItemService cartItemService;
     @Autowired
@@ -53,9 +47,9 @@ public class CustomerController {
     public String viewCart(Model model , @PathVariable("id") Integer id){
         if(id<=diningTableService.viewTable().size()){
             model.addAttribute("menu",productService.getAllProducts());
-            model.addAttribute("all_items_in_shoppingcart",cartItemService.getAllCartItem(id));
+            model.addAttribute("all_items_in_shoppingcart",cartService.getAllCartItem(id));
             model.addAttribute("category",categoryRepository.findAll());
-            model.addAttribute("total_amount",cartItemService.total(id));
+            model.addAttribute("total_amount",cartService.total(id));
             model.addAttribute("idtable",id);
         }
 
@@ -64,31 +58,31 @@ public class CustomerController {
     @PostMapping("/addcart")
     public  String addCart(@RequestParam("idtable") Integer idtable, @RequestParam ("idproduct") Integer idproduct){
         Product product = productService.getProductById(idproduct);
-        cartItemService.addProduct(product,idtable);
+        cartService.addProduct(product,idtable);
         return "redirect:/customer/viewcart/"+idtable;
     }
     @PostMapping("/removecart")
     public  String removeCart(@RequestParam("idtable") Integer idtable, @RequestParam ("idproduct") Integer idproduct){
         Product product = productService.getProductById(idproduct);
-        cartItemService.removeProduct(product,idtable);
+        cartService.removeProduct(product,idtable);
         return "redirect:/customer/viewcart/"+idtable;
     }
     @PostMapping("/updatecart")
     public  String updateCart(@RequestParam("idtable") Integer idtable, @RequestParam ("idproduct") Integer idproduct ,
                               @RequestParam("quantity") Integer quantity){
         Product product = productService.getProductById(idproduct);
-        cartItemService.updateProduct(product,idtable,quantity);
+        cartService.updateProduct(product,idtable,quantity);
         return "redirect:/customer/viewcart/"+idtable;
     }
     @GetMapping("/removeallcart/{idtable}")
     public  String removeallcart(@PathVariable("idtable") Integer idtable){
-       cartItemService.removeAllProduct(idtable);
+       cartService.removeAllProduct(idtable);
         return "redirect:/customer/viewcart/"+idtable;
     }
 
     @GetMapping("/datmon/{idtable}")
     public String datMon(@PathVariable("idtable") Integer idtable) {
-        List<CartItem> cartItems = cartItemService.getAllCartItem(idtable);
+        List<CartItem> cartItems = cartItemService.getAll(idtable);
         if (cartItems.size() >= 1) {
             Invoice invoicenew = new Invoice();
             invoicenew.setIdTable(idtable);
@@ -97,17 +91,10 @@ public class CustomerController {
             for (CartItem c : cartItems) {
                 invoiceProductService.addProduct(c.getProduct(), idinvoice, c.getQuantity());
             }
-            cartItemService.removeAllProduct(idtable);
-
-            // Gửi thông báo WebSocket
             messagingTemplate.convertAndSend("/topic/new-order", "Có đơn hàng mới!");
-
-            // Trả về đường dẫn tới hàm viewCart với tham số id để làm mới trang
-
+            cartService.removeAllProduct(idtable);
         }
+
         return "redirect:/customer/viewcart/" + idtable;
     }
-
-
-
 }

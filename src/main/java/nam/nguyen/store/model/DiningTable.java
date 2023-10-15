@@ -15,7 +15,7 @@ import java.util.List;
 public class DiningTable {
     @Id
     private Integer id;
-    @OneToMany()
-    private List<CartItem> cartItems;
+    @OneToOne(mappedBy = "diningTable")
+    private Cart cart;
     private Integer status;
 }

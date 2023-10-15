@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+            <div class="container-fluid">
+                <div th:replace="stafflayout :: editfood"></div>
+            </div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/sidebarmenu.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
+        <script src="/libs/simplebar/dist/simplebar.js"></script>
+        <script src="/js/dashboard.js"></script>
+        <script>
+            function previewFile() {
+                var preview = document.getElementById('previewImage');
+                var fileInput = document.querySelector('input[type=file]');
+                var file = fileInput.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function() {
+                    preview.src = reader.result;
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = ""; // Xóa hình ảnh nếu người dùng chọn không có tệp
+                }
+            }
+        </script>
+
+
+
+
+</body>
+
+</html>

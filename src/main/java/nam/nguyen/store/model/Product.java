@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -23,6 +25,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private  Category category;
-//    @OneToMany(mappedBy = "prooduct")
-//    private InvoiceProduct invoiceProduct;
+//    @OneToMany(mappedBy = "product" , fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+//    private List<CartItem> cartItems;
 }
