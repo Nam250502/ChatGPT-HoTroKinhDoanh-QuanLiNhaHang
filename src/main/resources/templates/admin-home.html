@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap">
+                            <a class="btn btn-success  m-2 p-2" href="/admin/adduser" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                                        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                                      </svg>
+                                <span class="hide-menu">Thêm nhân viên</span>
+                            </a>
+                            <a class="btn btn-success m-2 p-2" href="/admin/calender" aria-expanded="false">
+                                <i class="ti ti-calendar-event"></i>
+                                <span class="hide-menu">Lịch làm việc</span>
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Mã</th>
+                                        <th scope="col">Tên</th>
+                                        <th scope="col">SDT</th>
+                                        <th scope="col">Địa chỉ</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Chức vụ</th>
+                                        <th scope="col">Hành động</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="orderTableBody">
+                                    <tr th:each="item : ${users}">
+                                        <td th:text="${item.id}"></td>
+                                        <td th:text="${item.name}"></td>
+
+                                        <td th:text="${item.phone}"></td>
+                                        <td th:text="${item.address}"></td>
+                                        <td th:text="${item.email}"></td>
+                                        <td>
+                                            <ul th:each="item : ${item.roles}">
+                                                <li th:if="${item.name == 'ROLE_ADMIN'}">
+                                                    <span>Admin</span>
+                                                </li>
+                                                <li th:if="${item.name == 'ROLE_STAFF'}">
+                                                    <span>nhân viên</span>
+                                                </li>
+                                                <li th:if="${item.name == 'ROLE_CHEF'}">
+                                                    <span>đầu bếp</span>
+                                                </li>
+
+                                            </ul>
+                                        </td>
+                                        <td class="d-flex flex-wrap">
+                                            <a th:href="@{/admin/removeuser/{iduser}(iduser=${item.id})}"> <i class="ti ti-user-x"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    </div>
+
+</body>
+
+</html>

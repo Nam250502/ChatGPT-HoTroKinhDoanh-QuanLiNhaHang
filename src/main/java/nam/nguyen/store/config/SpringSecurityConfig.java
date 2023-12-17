@@ -1,7 +1,6 @@
-package com.hutech.BEFoodStore.config;
+package nam.nguyen.store.config;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 
 @Configuration
 @AllArgsConstructor
@@ -28,23 +28,25 @@ public class SpringSecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/css/**", "/js/**","/libs/**","/scss/**","/assets/**","/images/**").permitAll()
+                                .requestMatchers("/customer/**").permitAll()
+                                .requestMatchers("/ws-example/**").permitAll()
+                                .requestMatchers("/chef/**").hasAnyAuthority("ROLE_CHEF","ROLE_ADMIN","ROLE_STAFF")
+                                .requestMatchers("/staff/**").hasAnyAuthority("ROLE_CHEF","ROLE_ADMIN","ROLE_STAFF")
+                                .requestMatchers("/store/**").hasAnyAuthority("ROLE_CHEF","ROLE_ADMIN","ROLE_STAFF")
+                                .requestMatchers("/admin/**").hasAnyAuthority("ROLE_CHEF","ROLE_ADMIN","ROLE_STAFF")
+                                .requestMatchers("/user/**").authenticated()
+                                .requestMatchers("/help/**").permitAll()
                                 .requestMatchers("/**").permitAll()
-                                .requestMatchers("/product/**").permitAll()
-                                .requestMatchers("/webjars/**", "/assets/**","/css/**","/img/**","/js/**","/scss/**","/vendor/**").permitAll()
-                                .requestMatchers("/shoppingcart/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-                                .requestMatchers("/service/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-                                .requestMatchers("/rest/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-                                .requestMatchers("/user/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-                                .requestMatchers("/user/naptien").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers("/user/viewnaptien").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/feedback/**").permitAll()
 
 
-                ).formLogin(
+                ) .formLogin(
                         form -> form
+
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/product/home")
+                                .successHandler(new CustomAuthenticationSuccessHandler())
                                 .permitAll()
 
 
@@ -60,4 +62,5 @@ public class SpringSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
 }

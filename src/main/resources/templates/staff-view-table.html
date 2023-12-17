@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid">
+
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Bàn Số</th>
+                            <th scope="col">Ngày Đặt</th>
+                            <th scope="col">Trạng Thái Thanh Toán</th>
+                            <th scope="col">Tổng Tiền</th>
+                            <th scope="col">Chi Tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${invoices}">
+                            <td th:text="${item.idTable}"></td>
+                            <td th:text="${#temporals.format(item.issueDate, 'd-M-yyyy HH:mm:ss')}"></td>
+                            <td>
+                                <span th:if="${item.statusPay==0}" class="text-danger">chưa thanh
+                                    toán</span>
+                                <span th:if="${item.statusPay==1}" class="text-success">đã thanh toán</span>
+                            </td>
+                            <td>
+                                <span class="text-success" th:text="${item.total}"></span>
+
+                            </td>
+                            <td>
+                                <a class="btn btn-success" href="" th:href="@{/staff/detailtable/{id} (id=${item.id})}">Chi tiết</a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <span>tổng tiền : <b th:text="${sumtotal}"></b><span> VND</span></span>
+                <span>
+                    <form th:action="@{/staff/confirmpaymenttable}" method="post">
+                        <input type="hidden" th:value="${idtable}" name="idtable">
+                        <button class="btn btn-success" type="submit"> Xác nhận đã thanh toán</button>
+                    </form>
+                </span>
+            </div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/sidebarmenu.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script src="/libs/simplebar/dist/simplebar.js"></script>
+
+
+</body>
+
+</html>

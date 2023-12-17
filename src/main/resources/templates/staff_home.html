@@ -1,13 +1,14 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Modernize Free</title>
-    <link rel="shortcut icon" type="image/png" href="/images/logos/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/libs/simplebar/dist/simplebar.css">
     <link rel="stylesheet" href="/css/styles.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">z
 
 </head>
 
@@ -26,6 +27,41 @@
 
                 <div class="card">
                     <div class="card-body">
+                        <div class="d-flex align-items-end justify-content-center">
+                            <div class="dropdown m-2">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ngày Lập
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="/staff/invoicetoday">Hôm nay</a></li>
+
+
+                                </ul>
+                            </div>
+                            <div class="dropdown m-2">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Trạng thái
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="/staff/findinvoicebystatus/0">Chưa thanh toán</a></li>
+                                    <li><a class="dropdown-item" href="/staff/findinvoicebystatus/1">Đã thanh toán</a></li>
+
+                                </ul>
+                            </div>
+                            <div class="input-group m-2 ">
+                                <form action="" th:action="@{/staff/findinvoice}" method="get" onsubmit="return validateForm()">
+                                    <div class="d-flex align-items-center">
+                                        <input name="id" type="number" min="1" class="form-control" placeholder="Nhập mã hóa đơn" id="invoiceIdInput">
+                                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Tìm</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+
+
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -37,21 +73,30 @@
                                         <th scope="col">Chi Tiết</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr th:each="item : ${invoices}">
+                                <tbody id="orderTableBody">
+                                    <tr th:each="item : ${invoices}" data-invoice-id="${item.id}">
                                         <td th:text="${item.idTable}"></td>
-                                        <td th:text="${item.issueDate}"></td>
+                                        <td th:text="${#temporals.format(item.issueDate, 'd-M-yyyy HH:mm:ss')}"></td>
+
                                         <td>
                                             <span th:if="${item.statusPay==0}" class="text-danger">chưa thanh
                                                 toán</span>
                                             <span th:if="${item.statusPay==1}" class="text-success">đã thanh toán</span>
                                         </td>
                                         <td>
-                                            <span th:if="${item.statusService==0}" class="text-success">chờ xác nhận từ nhà bếp</span>
-                                            <span th:if="${item.statusService==1}" class="text-danger">đang chế biến món ăn</span>
-                                            <span th:if="${item.statusService==2}" class="text-success">món ăn đã xong</span>
-                                            <span th:if="${item.statusService==3}" class="text-danger">đã phục vụ</span>
-                                            <span th:if="${item.statusService==4}" class="text-success">nhà bếp từ chối đơn</span>
+                                            <span th:if="${item.statusService==0}" class="text-success status">chờ xác
+                                                nhận từ
+                                                nhà bếp</span>
+                                            <span th:if="${item.statusService==1}" class="text-danger status">đang chế
+                                                biến món
+                                                ăn</span>
+                                            <span th:if="${item.statusService==2}" class="text-success status">món ăn đã
+                                                xong</span>
+                                            <span th:if="${item.statusService==3}" class="text-danger status">đã phục
+                                                vụ</span>
+                                            <span th:if="${item.statusService==4}" class="text-success status">nhà bếp
+                                                từ chối
+                                                đơn</span>
                                         </td>
                                         <td>
                                             <a class="btn btn-success" href="" th:href="@{/staff/detailtable/{id} (id=${item.id})}">Chi tiết</a>
@@ -67,25 +112,124 @@
         </div>
         <script src="/libs/jquery/dist/jquery.min.js"></script>
         <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
         <script src="/js/sidebarmenu.js"></script>
         <script src="/js/app.min.js"></script>
-        <script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
         <script src="/libs/simplebar/dist/simplebar.js"></script>
-        <script src="/js/dashboard.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
         <script>
             var socket = new SockJS('/ws-example'); // Kết nối đến WebSocket endpoint
             var stompClient = Stomp.over(socket);
 
-            stompClient.connect({}, function(frame) {
-                stompClient.subscribe('/topic/new-order', function(message) {
-                    // Hiển thị thông báo
-                    location.reload();
-                });
+            $.ajax({
+                type: "GET",
+                url: "/help/gethelp",
+                success: function(response) {
+                    // Xử lý dữ liệu nhận được từ máy chủ
+                    var messages = response;
+                    for (var i = 0; i < messages.length; i++) {
+                        var message = messages[i];
+                        var helpItem = document.createElement("div");
+                        helpItem.className = "col-md-4 m-2";
+                        var card = document.createElement("div");
+                        card.className = "card mb-3";
+
+                        var cardBody = document.createElement("div");
+                        cardBody.className = "card-body";
+
+                        var p = document.createElement("p");
+                        p.className = "card-text";
+                        p.textContent = message;
+
+                        var closeButton = document.createElement("button");
+                        closeButton.className = "btn btn-danger";
+                        closeButton.textContent = "Xóa";
+                        closeButton.onclick = function() {
+                            $.ajax({
+                                type: "post",
+                                url: "/help/delete-help",
+                                data: JSON.stringify({
+                                    messenger: message
+                                }),
+                                contentType: "application/json; charset=utf-8",
+                                success: function(response) {
+                                    helpItem.remove();
+                                }
+                            });
+
+
+                        };
+
+                        cardBody.appendChild(p);
+                        cardBody.appendChild(closeButton);
+                        card.appendChild(cardBody);
+                        helpItem.appendChild(card);
+
+                        var customerHelp = document.getElementById("customerhelp");
+                        customerHelp.appendChild(helpItem);
+                    }
+                }
             });
+
+
+            stompClient.connect({}, function(frame) {
+                stompClient.subscribe('/topic/new-order', function(invoice) {
+                    var invoiceData = JSON.parse(invoice.body);
+                    var tableBody = document.getElementById("orderTableBody");
+                    var row = $("<tr>");
+                    row.append($("<td>").text(invoiceData.idTable));
+                    row.append($("<td>").text(invoiceData.issueDate));
+                    var statusPayCell = $("<td>");
+                    var statusServiceCell = $("<td>");
+
+                    if (invoiceData.statusPay == 0) {
+                        statusPayCell.append($("<span>").text("Chưa thanh toán").addClass("text-danger"));
+                    } else if (invoiceData.statusPay == 1) {
+                        statusPayCell.append($("<span>").text("Đã thanh toán").addClass("text-success"));
+                    }
+
+                    if (invoiceData.statusService == 0) {
+                        statusServiceCell.append($("<span>").text("Chờ xác nhận từ nhà bếp").addClass("text-success"));
+                    } else if (invoiceData.statusService == 1) {
+                        statusServiceCell.append($("<span>").text("Đang chế biến món ăn").addClass("text-danger"));
+                    } else if (invoiceData.statusService == 2) {
+                        statusServiceCell.append($("<span>").text("Món ăn đã xong").addClass("text-success"));
+                    } else if (invoiceData.statusService == 3) {
+                        statusServiceCell.append($("<span>").text("Đã phục vụ").addClass("text-danger"));
+                    } else if (invoiceData.statusService == 4) {
+                        statusServiceCell.append($("<span>").text("Nhà bếp từ chối đơn").addClass("text-success"));
+                    }
+
+                    row.append(statusPayCell);
+                    row.append(statusServiceCell);
+
+                    var detailLink = $("<a>").text("Chi tiết").addClass("btn btn-success").attr("href", "/staff/detailtable/" + invoiceData.id);
+                    var detailCell = $("<td>").append(detailLink);
+                    row.append(detailCell);
+
+                    tableBody.appendChild(row[0]); // Sử dụng [0] để truy cập phần tử thật của jQuery
+
+                });
+
+
+
+            });
+
+            function validateForm() {
+                var invoiceIdInput = document.getElementById('invoiceIdInput');
+                var inputValue = invoiceIdInput.value.trim();
+
+                if (inputValue === '') {
+                    alert('Vui lòng nhập mã hóa đơn.');
+                    return false; // Ngăn chặn việc submit form nếu không có giá trị
+                }
+
+                return true; // Cho phép submit form nếu có giá trị
+            }
         </script>
 
+    </div>
 
 </body>
 

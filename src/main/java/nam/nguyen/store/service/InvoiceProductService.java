@@ -16,6 +16,9 @@ public class InvoiceProductService {
     public List<InvoiceProduct> getAllInvoiceProduct(Integer id) {
         return invoiceProductRepository.findInvoiceProductsByTableId(id);
     }
+    public List<Object[]> countProduct() {
+        return invoiceProductRepository.countProduct();
+    }
 
 
     public void addProduct(Product product, Integer idinvoice,Integer quantity) {

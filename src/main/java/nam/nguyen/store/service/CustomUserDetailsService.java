@@ -1,8 +1,9 @@
-package com.hutech.BEFoodStore.service;
+package nam.nguyen.store.service;
 
-import com.hutech.BEFoodStore.model.User;
-import com.hutech.BEFoodStore.repository.UserRepository;
+
 import lombok.AllArgsConstructor;
+import nam.nguyen.store.model.User;
+import nam.nguyen.store.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

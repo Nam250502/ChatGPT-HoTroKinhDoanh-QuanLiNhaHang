@@ -1,0 +1,102 @@
+<!doctype html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+            <div class="container-fluid">
+                <form action="/store/addfood" method="post" enctype="multipart/form-data">
+                    <div class="row">
+
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <img id="previewImage" alt="" style="height: 170px; width: 340px;">
+                                        <input type="file" class="form-control" id="url" name="file" accept="image/*" onchange="previewFile()">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <input type="hidden" name="id">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" class="form-control" id="name" name="name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <textarea class="form-control" id="description" name="description"></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="price">Price</label>
+                                        <input type="text" class="form-control" id="price" name="price">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="category">Category</label>
+                                        <select class="form-control" id="category" name="category">
+                                            <option th:each="c : ${category}" th:value="${c.id}" th:text="${c.name}" ></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Thêm món</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/sidebarmenu.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script src="/libs/apexcharts/dist/apexcharts.min.js"></script>
+        <script src="/libs/simplebar/dist/simplebar.js"></script>
+        <script src="/js/dashboard.js"></script>
+        <script>
+            function previewFile() {
+                var preview = document.getElementById('previewImage');
+                var fileInput = document.querySelector('input[type=file]');
+                var file = fileInput.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function() {
+                    preview.src = reader.result;
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = ""; // Xóa hình ảnh nếu người dùng chọn không có tệp
+                }
+            }
+        </script>
+
+
+
+
+</body>
+
+</html>

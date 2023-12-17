@@ -19,19 +19,45 @@ public class InvoiceService {
     public List<Invoice> getAllInvoice() {
         return invoiceRepository.findAll();
     }
-    public List<Invoice> getInvoiceToday() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String formattedDateTime = currentDateTime.format(formatter);
-        return invoiceRepository.findInvoicesByCurrentDateAndStatusService(formattedDateTime);
+    public List<Invoice> getInvoiceByStatus(Integer status) {
+        return invoiceRepository.findInvoicesByStatusService(status);
+    }
+    public List<Invoice> getAllInvoicePaid() {
+        return invoiceRepository.findInvoicesByInvoicePaid();
+    }
+    public List<Invoice> getInvoicesForToday() {
+        LocalDateTime startDate = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endDate = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999);
+
+        return invoiceRepository.getInvoicesForToday(startDate, endDate);
+    }
+    public List<Invoice> getInvoicesForTodaySuccess() {
+        LocalDateTime startDate = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endDate = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999);
+
+        return invoiceRepository.getInvoicesForTodaySuccess(startDate, endDate);
+    }
+    public List<Invoice> findUnpaidInvoices() {
+
+        return invoiceRepository.findInvoicesByCurrentDateAndStatusService();
+    }
+    public List<Invoice> findInvoicesChef() {
+
+        return invoiceRepository.getInvoiceChef();
+    }
+    public List<Invoice> findInvoiceByIdTable(Integer id){
+        return invoiceRepository.findInvoiceByIdTable(id);
     }
 
 
-    public Integer saveInvoice(Invoice invoice) {
+    public Invoice saveInvoice(Invoice invoice) {
         Invoice savedInvoice = invoiceRepository.save(invoice);
-        return savedInvoice.getId();
+        return savedInvoice;
     }
-
+    public List<Invoice> savesInvoice(List<Invoice> invoices) {
+        List<Invoice> savedInvoices = invoiceRepository.saveAll(invoices);
+        return savedInvoices;
+    }
 
 
     public Invoice getInvoiceById(int id) {
@@ -55,6 +81,9 @@ public class InvoiceService {
 
         }
         return total;
+    }
+    public List<Object[]> getDataChartByYear(Integer year){
+        return invoiceRepository.getMonthlyTotalsByYear(year);
     }
 
 }

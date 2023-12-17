@@ -1,17 +1,19 @@
-package com.hutech.BEFoodStore.service;
+package nam.nguyen.store.service;
 
 
-import com.hutech.BEFoodStore.model.Role;
-import com.hutech.BEFoodStore.model.User;
-import com.hutech.BEFoodStore.repository.RoleRepository;
-import com.hutech.BEFoodStore.repository.UserRepository;
+
 import lombok.extern.slf4j.Slf4j;
 
+import nam.nguyen.store.model.Role;
+import nam.nguyen.store.model.User;
+import nam.nguyen.store.repository.RoleRepository;
+import nam.nguyen.store.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -32,15 +34,28 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+    public User getUserByUserName(String username){
+        User user = userRepository.getUserByUsername(username);
+        return user;
+    }
+    public List<User> getAllUser(){
+        return userRepository.findAll();
+    }
 
 
-    public void register(User user) {
+    public void register(User user , Integer roleId) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role defaultRole = roleService.getDefaultRole();
+        Role role = roleService.geRoleById(roleId);
         Set<Role> roles = new HashSet<>();
-        roles.add(defaultRole);
+        roles.add(role);
         user.setRoles(roles);
         userRepository.save(user);
+    }
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+    public void removeUser(Integer iduser) {
+        userRepository.deleteById(iduser);
     }
 
 }

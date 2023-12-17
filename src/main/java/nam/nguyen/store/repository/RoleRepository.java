@@ -1,9 +1,10 @@
-package com.hutech.BEFoodStore.repository;
+package nam.nguyen.store.repository;
 
 
 
 
-import com.hutech.BEFoodStore.model.Role;
+
+import nam.nguyen.store.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

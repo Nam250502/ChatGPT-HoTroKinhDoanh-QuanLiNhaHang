@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid">
+
+
+                <div class="d-flex flex-wrap " id="customerhelp">
+                    <!-- Các thẻ sẽ được thêm vào đây -->
+                </div>
+
+
+            </div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- <script src="/js/sidebarmenu.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script src="/libs/simplebar/dist/simplebar.js"></script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+        <script>
+            var socket = new SockJS('/ws-example'); // Kết nối đến WebSocket endpoint
+            var stompClient = Stomp.over(socket);
+            $.ajax({
+                type: "GET",
+                url: "/help/gethelp",
+                success: function(response) {
+                    // Xử lý dữ liệu nhận được từ máy chủ
+                    var messages = response;
+                    for (var i = 0; i < messages.length; i++) {
+                        var message = messages[i];
+                        var helpItem = document.createElement("div");
+                        helpItem.className = "col-md-5 m-2 ";
+                        var card = document.createElement("div");
+                        card.className = "card mb-3";
+
+                        var cardBody = document.createElement("div");
+                        cardBody.className = "card-body";
+
+                        var p = document.createElement("p");
+                        p.className = "card-text";
+                        p.textContent = message;
+
+                        var closeButton = document.createElement("button");
+                        closeButton.className = "btn btn-danger";
+                        closeButton.textContent = "Xóa";
+                        closeButton.onclick = function() {
+                            $.ajax({
+                                type: "post",
+                                url: "/help/delete-help",
+                                data: JSON.stringify({
+                                    messenger: message
+                                }),
+                                contentType: "application/json; charset=utf-8",
+                                success: function(response) {
+                                    helpItem.remove();
+                                }
+                            });
+
+
+                        };
+
+                        cardBody.appendChild(p);
+                        cardBody.appendChild(closeButton);
+                        card.appendChild(cardBody);
+                        helpItem.appendChild(card);
+
+                        var customerHelp = document.getElementById("customerhelp");
+                        customerHelp.appendChild(helpItem);
+                    }
+                }
+            });
+
+
+            stompClient.connect({}, function(frame) {
+
+
+                stompClient.subscribe('/topic/help', function(response) {
+                    var messenger = response.body;
+
+                    var helpItem = document.createElement("div");
+                    helpItem.className = "col-md-5 m-2";
+                    var card = document.createElement("div");
+                    card.className = "card mb-3";
+
+                    var cardBody = document.createElement("div");
+                    cardBody.className = "card-body";
+
+                    var p = document.createElement("p");
+                    p.className = "card-text";
+                    p.textContent = messenger;
+
+                    var closeButton = document.createElement("button");
+                    closeButton.className = "btn btn-danger";
+                    closeButton.textContent = "Xóa";
+                    closeButton.onclick = function() {
+                        $.ajax({
+                            type: "post",
+                            url: "/help/delete-help",
+                            data: JSON.stringify({
+                                messenger: messenger
+                            }),
+                            contentType: "application/json; charset=utf-8",
+                            success: function(response) {
+                                helpItem.remove();
+                            }
+                        });
+                    };
+
+                    cardBody.appendChild(p);
+                    cardBody.appendChild(closeButton);
+                    card.appendChild(cardBody);
+                    helpItem.appendChild(card);
+
+                    var customerHelp = document.getElementById("customerhelp");
+                    customerHelp.appendChild(helpItem);
+                })
+
+            });
+        </script>
+
+    </div>
+
+</body>
+
+</html>

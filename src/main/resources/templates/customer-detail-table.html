@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="container">
+        <!-- Sidebar Start -->
+        <!-- <div th:replace="layout :: sidebar"></div> -->
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="layout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid mt-5">
+                <div class="card">
+                    <div class="card-header" th:text="'Bàn :' +${invoice.idTable} +'   hóa đơn số :'+ ${invoice.id}">
+                        Quote
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered text-center">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Tên món</th>
+                                            <th scope="col">Số Lượng</th>
+                                            <th scope="col">Tổng</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="item : ${invoice.invoiceProducts}">
+                                            <td th:text="${item.product.name}"></td>
+                                            <td th:text="${item.quantity}"></td>
+                                            <td th:text="${item.quantity}* ${item.product.price}"></td>
+                                        </tr>
+                                    </tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b th:text="'Tổng: ' + ${invoice.total} + ' VND'"></b></td>
+
+                                    </tr>
+                                </table>
+
+                                <!-- <div class="parent-container">
+                                    <form action="" th:action="@{/create-payment}" method="post">
+                                        <input type="hidden" th:value="${invoice.total}" name="total">
+                                        <input type="hidden" th:value="${invoice.id}" name="id">
+                                        <button type="submit" id="paymentButton" class="btn btn-primary float-right ml-2">Thanh Toán</button>
+                                    </form>
+
+                                </div> -->
+                                <div class="container mt-5">
+                                    <form th:action="@{/paymentMethod}" method="post">
+                                        <div class="mb-3">
+                                            <label for="paymentMethod" class="form-label">Chọn Phương thức thanh toán:</label>
+                                            <select class="form-select" id="paymentMethod" name="paymentMethod">
+                                                <option value="" selected disabled>Chọn Phương thức thanh toán</option>
+                                                <option value="local">Thanh toán tại quán</option>
+                                                <option value="momo">MoMo</option>
+                                            </select>
+                                        </div>
+                                        <input type="hidden" th:value="${invoice.id}" name="id">
+                                        <input type="hidden" th:value="${invoice.total}" name="total">
+                                        <input type="hidden" th:value="${invoice.idTable}" name="idtable">
+                                        <button type="submit" class="btn btn-primary">Tiếp tục thanh toán</button>
+                                    </form>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div th:replace="layout :: bottom"></div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/sidebarmenu.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script src="/libs/simplebar/dist/simplebar.js"></script>
+
+
+</body>
+
+</html>

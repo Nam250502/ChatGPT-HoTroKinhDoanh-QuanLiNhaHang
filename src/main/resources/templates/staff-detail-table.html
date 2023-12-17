@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-header" th:text="'Bàn :' +${invoice.idTable} +'   hóa đơn số :'+ ${invoice.id}">
+                        Quote
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered text-center">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Mã hóa đơn</th>
+                                            <th scope="col">Tên món</th>
+                                            <th scope="col">Số Lượng</th>
+                                            <th scope="col">Ghi chú</th>
+                                            <th scope="col">Thành Tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="item : ${invoice.invoiceProducts}">
+                                            <td th:text="${item.id}"></td>
+                                            <td th:text="${item.product.name}"></td>
+                                            <td th:text="${item.quantity}"></td>
+                                            <td th:text="${item.note}"></td>
+                                            <td th:text="${item.product.price}"></td>
+                                        </tr>
+                                    </tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b th:text="'Tổng: ' + ${invoice.total} + ' VND'"></b></td>
+
+                                    </tr>
+                                </table>
+                                <form th:action="@{/staff/confirmpayment}" method="post">
+                                    <input type="hidden" name="id" th:value="${invoice.id}">
+                                    <button th:if="${invoice.statusPay==0}" class="btn btn-success" type="submit"> đã thanh toán</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/sidebarmenu.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script src="/libs/simplebar/dist/simplebar.js"></script>
+</body>
+
+</html>

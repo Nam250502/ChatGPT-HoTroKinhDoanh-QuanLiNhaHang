@@ -1,10 +1,11 @@
-package com.hutech.BEFoodStore.model;
+package nam.nguyen.store.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,14 +26,12 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<Role> roles;
-    @OneToOne(mappedBy = "user" , fetch = FetchType.EAGER , cascade = CascadeType.ALL)
-    private  CartItem cartItem;
-
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY )
+    private List<CalendarStaff> calendars = new ArrayList<>();
 }

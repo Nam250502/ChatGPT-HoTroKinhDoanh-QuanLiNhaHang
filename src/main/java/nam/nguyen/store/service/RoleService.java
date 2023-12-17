@@ -1,11 +1,14 @@
-package com.hutech.BEFoodStore.service;
+package nam.nguyen.store.service;
 
 
 
-import com.hutech.BEFoodStore.model.Role;
-import com.hutech.BEFoodStore.repository.RoleRepository;
+
+import nam.nguyen.store.model.Role;
+import nam.nguyen.store.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RoleService {
@@ -15,8 +18,15 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
     public Role getDefaultRole() {
-        String roleName = "ROLE_USER";
+        String roleName = "ROLE_STAFF";
         return roleRepository.findByName(roleName)
                 .orElseThrow(() -> new RuntimeException("Default role not found"));
+    }
+    public Role geRoleById(Integer id) {
+        return roleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Default role not found"));
+    }
+    public List<Role> getAll(){
+        return roleRepository.findAll();
     }
 }

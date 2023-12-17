@@ -16,17 +16,17 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToMany(mappedBy = "invoice" ,  cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "invoice" ,  cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
     private List<InvoiceProduct>  invoiceProducts;
-    private String issueDate;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime issueDate;
     private Integer idTable;
     private Integer statusPay;
     private Integer statusService;
+    private long total;
+    private String note;
     public Invoice() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        String formattedDateTime = currentDateTime.format(formatter);
-        this.issueDate = formattedDateTime;
+        this.issueDate = LocalDateTime.now();
         this.setStatusPay(0);
         this.setStatusService(0);
     }

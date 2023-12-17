@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/libs/simplebar/dist/simplebar.css">
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div class="">
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="layout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container col-md-10">
+                <div class="row m-3 p-3">
+                    <div class="col-md-12 " style="border: 1x solid black;">
+                        <div class="card">
+                            <div class="card-header">
+                                Chat
+                            </div>
+                            <div class="card-body" id="chat-box">
+                                <!-- Chat messages will be displayed here -->
+
+                            </div>
+                            <div class="loading-spinner card-body" style="display: none;">
+                                Chờ phản hồi...
+                            </div>
+                            <div class="card-footer">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Nhập câu hỏi" id="message-input" onkeydown="handleKeyPress(event)">
+                                    <button class="btn btn-primary" onclick="sendMessage()">Gửi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:replace="layout :: bottom"></div>
+        </div>
+    </div>
+    <script src="/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/sidebarmenu.js"></script>
+    <script src="/js/app.min.js"></script>
+    <script src="/libs/simplebar/dist/simplebar.js"></script>
+    <script>
+        function sendMessage() {
+            var messageInput = document.getElementById("message-input");
+            var chatBox = document.getElementById("chat-box");
+            var loadingSpinner = document.querySelector(".loading-spinner");
+            var message = messageInput.value;
+            $.ajax({
+                type: "get",
+                url: "/chat",
+                data: {
+                    content: message
+                },
+                beforeSend: function() {
+                    loadingSpinner.style.display = "block";
+
+                },
+                success: function(response) {
+
+                    chatBox.innerHTML += "<pre><strong>Chat Bot:</strong> " + response + "</pre>";
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                },
+                complete: function() {
+                    // Ẩn biểu tượng loading khi yêu cầu hoàn tất (thành công hoặc thất bại)
+                    loadingSpinner.style.display = "none";
+                },
+                error: function(xhr, status, error) {
+                    chatBox.innerHTML += "<p><strong>Chat Bot:</strong>Xin lỗi nhưng bạn vui lòng đặt lại câu hỏi nhé <3 </p>";
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                    console.error("Error:", status, error);
+                }
+            });
+
+            if (message.trim() !== "") {
+                // Append the new message to the chat box
+                chatBox.innerHTML += "<p><strong>Bạn:</strong> " + message + "</p>";
+
+                // Clear the input field
+                messageInput.value = "";
+
+                // Scroll to the bottom of the chat box
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+                event.preventDefault(); // Ngăn chặn mặc định hành vi khi nhấn Enter trong ô input
+            }
+        }
+    </script>
+</body>
+
+</html>

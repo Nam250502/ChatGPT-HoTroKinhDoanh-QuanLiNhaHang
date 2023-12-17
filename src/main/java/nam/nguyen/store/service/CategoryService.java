@@ -38,6 +38,7 @@ public class CategoryService {
     }
 
 
+
     public void deleteCategoryById(int id) {
         this.categoryRepository.deleteById(id);
     }

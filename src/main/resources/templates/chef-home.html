@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div th:replace="stafflayout :: header"></div>
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-wrap" id="customerhelp">
+                    <!-- Các thẻ sẽ được thêm vào đây -->
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Bàn Số</th>
+                                <th scope="col">Ngày Đặt</th>
+                                <th scope="col">Trạng Thái Thanh Toán</th>
+                                <th scope="col">Trạng Thái Phục Vụ</th>
+                                <th scope="col">Chi Tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <tr th:each="item : ${invoices}">
+                                <td th:text="${item.idTable}"></td>
+                                <td th:text="${#temporals.format(item.issueDate, 'd-M-yyyy HH:mm:ss')}"></td>
+                                <td>
+                                    <span th:if="${item.statusPay==0}" class="text-danger">chưa thanh
+                                                toán</span>
+                                    <span th:if="${item.statusPay==1}" class="text-success">đã thanh toán</span>
+                                </td>
+                                <td>
+                                    <span th:if="${item.statusService==0}" class="text-success">chờ xác nhận từ nhà bếp</span>
+                                    <span th:if="${item.statusService==1}" class="text-danger">đang chế biến món ăn</span>
+                                    <span th:if="${item.statusService==2}" class="text-success">món ăn đã xong</span>
+                                    <span th:if="${item.statusService==3}" class="text-danger">đã phục vụ</span>
+                                    <span th:if="${item.statusService==4}" class="text-success">nhà bếp từ chối đơn</span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-success" href="" th:href="@{/chef/detailtable/{id} (id=${item.id})}">Chi tiết</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="/js/sidebarmenu.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script src="/libs/simplebar/dist/simplebar.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script>
+        var socket = new SockJS('/ws-example'); // Kết nối đến WebSocket endpoint
+        var stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            stompClient.subscribe('/topic/new-order', function(invoice) {
+                var invoiceData = JSON.parse(invoice.body);
+                var tableBody = document.getElementById("orderTableBody");
+                var row = $("<tr>");
+                row.append($("<td>").text(invoiceData.idTable));
+                row.append($("<td>").text(invoiceData.issueDate));
+                var statusPayCell = $("<td>");
+                var statusServiceCell = $("<td>");
+
+                if (invoiceData.statusPay == 0) {
+                    statusPayCell.append($("<span>").text("Chưa thanh toán").addClass("text-danger"));
+                } else if (invoiceData.statusPay == 1) {
+                    statusPayCell.append($("<span>").text("Đã thanh toán").addClass("text-success"));
+                }
+
+                if (invoiceData.statusService == 0) {
+                    statusServiceCell.append($("<span>").text("Chờ xác nhận từ nhà bếp").addClass("text-success"));
+                } else if (invoiceData.statusService == 1) {
+                    statusServiceCell.append($("<span>").text("Đang chế biến món ăn").addClass("text-danger"));
+                } else if (invoiceData.statusService == 2) {
+                    statusServiceCell.append($("<span>").text("Món ăn đã xong").addClass("text-success"));
+                } else if (invoiceData.statusService == 3) {
+                    statusServiceCell.append($("<span>").text("Đã phục vụ").addClass("text-danger"));
+                } else if (invoiceData.statusService == 4) {
+                    statusServiceCell.append($("<span>").text("Nhà bếp từ chối đơn").addClass("text-success"));
+                }
+
+                row.append(statusPayCell);
+                row.append(statusServiceCell);
+
+                var detailLink = $("<a>").text("Chi tiết").addClass("btn btn-success").attr("href", "/staff/detailtable/" + invoiceData.id);
+                var detailCell = $("<td>").append(detailLink);
+                row.append(detailCell);
+
+                tableBody.appendChild(row[0]); // Sử dụng [0] để truy cập phần tử thật của jQuery
+
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

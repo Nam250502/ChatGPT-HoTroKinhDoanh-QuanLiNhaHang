@@ -16,12 +16,17 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
+    public List<Product> getAllProductForCustomer(Integer status) {
+        return productRepository.getAllProductForCustomer(status);
+    }
+    public List<Product> getProductByName(String name) {
+        return productRepository.findFoodByName(name);
+    }
 
 
     public void saveProduct(Product product) {
         this.productRepository.save(product);
     }
-
 
     public Product getProductById(int id) {
         Optional<Product>optional = productRepository.findById(id);

@@ -12,4 +12,10 @@ import java.util.List;
 public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct,Integer> {
     @Query("SELECT c FROM InvoiceProduct c WHERE c.invoice.id = :idinvoice")
     List<InvoiceProduct> findInvoiceProductsByTableId(@Param("idinvoice") Integer idinvoice);
+    @Query("SELECT p.name, COUNT(ip.product) " +
+            "FROM InvoiceProduct ip " +
+            "JOIN ip.product p " +
+            "GROUP BY p.name")
+    List<Object[]> countProduct();
+
 }

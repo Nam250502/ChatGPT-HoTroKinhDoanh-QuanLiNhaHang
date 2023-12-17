@@ -19,12 +19,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    @Column(length = 1000)
     private String description;
     private  String url;
     private long price;
+    private Integer statussell;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private  Category category;
-//    @OneToMany(mappedBy = "product" , fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-//    private List<CartItem> cartItems;
+
 }

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid">
+                <button id="showform" class="btn btn-outline-secondary" type="button">thiết lập số bàn</button>
+                <button id="showfindtable" class="btn btn-outline-secondary" type="button">tìm bàn</button>
+                <a href="/staff/viewalltable" class="btn btn-outline-secondary">tất cả bàn</a>
+
+                <div class="input-group mb-3">
+                    <input id="inputtable" type="text" class="form-control w-25" placeholder="Nhập số lượng bàn mong muốn" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button id="settable" class="btn btn-outline-secondary" type="button">Đặt</button>
+                        <button id="findtable" class="btn btn-outline-secondary" type="button">Tìm</button>
+                    </div>
+                </div>
+
+                <div th:insert="stafflayout :: tablestore"></div>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Nam Nguyễn</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body d-flex align-items-center justify-content-center">
+                                <div id="qrCodeResult">
+                                    <img id="qrCodeImage" src="" alt="" width="300px" height="300px">
+
+                                </div>
+                            </div>
+                            <div class="modal-body d-flex align-items-center justify-content-center">
+                                <a class="btn btn-success" href="" id="taiimg">Tải ảnh xuống</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="/libs/jquery/dist/jquery.min.js"></script>
+            <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+            <script>
+                document.getElementById("inputtable").style.display = "none";
+                document.getElementById("settable").style.display = "none";
+                document.getElementById("findtable").style.display = "none";
+                const qrCodeImage = document.getElementById("qrCodeImage");
+                const CodeImage = document.getElementById("taiimg");
+                const modal = document.getElementById("exampleModal");
+                modal.addEventListener("show.bs.modal", function(event) {
+                    const button = event.relatedTarget;
+                    const idTable = button.getAttribute("data-id-table");
+                    console.log(idTable);
+                    qrCodeImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=/customer/viewmenu/' + idTable;
+                    CodeImage.href = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=/customer/viewmenu/' + idTable;
+
+                });
+                $('#showform').click(function() {
+                    document.getElementById("inputtable").style.display = "block";
+                    document.getElementById("settable").style.display = "block";
+                    document.getElementById("showform").style.display = "none";
+
+                });
+                $('#settable').click(function() {
+                    var inputtable = $('#inputtable').val();
+                    $.ajax({
+                        type: "get",
+                        url: "/store/addtable/" + inputtable,
+                        success: function(response) {
+                            location.reload();
+                        }
+                    });
+                });
+                $('#findtable').click(function() {
+                    var inputtable = $('#inputtable').val();
+                    var url = "/staff/viewtablebyid/" + encodeURIComponent(inputtable);
+
+                    // Chuyển hướng trình duyệt đến URL sau khi thực hiện AJAX
+                    window.location.href = url;
+                });
+                $('#showfindtable').click(function() {
+                    document.getElementById("inputtable").style.display = "block";
+                    document.getElementById("findtable").style.display = "block";
+                    document.getElementById("showfindtable").style.display = "none";
+                });
+            </script>
+
+
+
+
+
+        </div>
+
+</body>
+
+</html>

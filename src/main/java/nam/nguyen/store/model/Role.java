@@ -1,4 +1,4 @@
-package com.hutech.BEFoodStore.model;
+package nam.nguyen.store.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

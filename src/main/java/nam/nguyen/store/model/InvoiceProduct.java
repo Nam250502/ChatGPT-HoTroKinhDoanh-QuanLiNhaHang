@@ -21,7 +21,7 @@ public class InvoiceProduct {
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
     private Integer quantity;
-    private String note;
+
     public long sumPrice(){
         return quantity*product.getPrice();
     }

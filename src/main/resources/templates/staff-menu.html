@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid">
+                <div class="d-flex align-items-center justify-content-end">
+                    <a href="/store/addfood" class="btn btn-secondary">Thêm món</a>
+                </div>
+                <div class="d-flex flex-wrap align-items-center">
+                    <form action="" th:action="@{/store/findfood}" method="get" class="p-2 m-2 input-group mb-3 d-flex align-items-end w-25 ">
+                        <input name="name" type="text" class="form-control" placeholder="Nhập tên món ăn" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button id="findfood" class="btn btn-outline-secondary" type="submit"><i class="ti ti-search"></i></button>
+                        </div>
+                    </form>
+                    <form th:action="@{/store/getfoodbycategory}" method="get" class="w-25 p-2 m-2 " id="formCategory">
+                        <select class="form-select " aria-label="Default select example" onchange="submitCategory()" name="idcategory">
+                            <option selected>Danh mục</option>
+                            <option th:each="item : ${categorys}" th:text="${item.name}" th:value="${item.id}">One</option>
+                           
+                        </select>
+                    </form>
+                    <form th:action="@{/store/getfoodbystatussell}" method="get" class="w-25 p-2 m-2 " id="formStatus">
+                        <select class="form-select " aria-label="Default select example" onchange="submitStatus()" name="status">
+                            <option selected>Trạng thái</option>
+                            <option value="1">Đang bán</option>
+                            <option value="0">Dừng bán</option>
+                        </select>
+                    </form>
+
+                </div>
+                <div th:replace="stafflayout :: product"></div>
+            </div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function submitStatus() {
+                document.getElementById('formStatus').submit();
+            }
+
+            function submitCategory() {
+                document.getElementById('formCategory').submit();
+            }
+        </script>
+</body>
+
+</html>

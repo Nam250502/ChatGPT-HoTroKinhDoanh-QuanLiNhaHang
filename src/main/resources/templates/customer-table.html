@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="container">
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="layout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container-fluid ">
+                mt-5
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Bàn Số</th>
+                            <th scope="col">Mã hóa đơn</th>
+                            <th scope="col">Ngày Đặt</th>
+                            <th scope="col">Trạng Thái Thanh Toán</th>
+                            <th scope="col">Trạng Thái Phục Vụ</th>
+                            <th scope="col">Tổng tiền</th>
+                            <th scope="col">Chi Tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${invoices}">
+                            <td th:text="${item.idTable}"></td>
+                            <td th:text="${item.id}"></td>
+                            <td th:text="${#temporals.format(item.issueDate, 'd-M-yyyy HH:mm:ss')}"></td>
+                            <td>
+                                <span th:if="${item.statusPay==0}" class="text-danger">chưa thanh
+                                    toán</span>
+                                <span th:if="${item.statusPay==1}" class="text-success">đã thanh toán</span>
+                            </td>
+                            <td>
+                                <span th:if="${item.statusService==0}" class="text-success">chờ xác nhận từ nhà bếp</span>
+                                <span th:if="${item.statusService==1}" class="text-success">đang chế biến món ăn</span>
+                                <span th:if="${item.statusService==2}" class="text-success">món ăn đã xong</span>
+                                <span th:if="${item.statusService==3}" class="text-success">đã phục vụ</span>
+                                <span th:if="${item.statusService==4}" class="text-danger">nhà bếp từ chối đơn</span>
+                            </td>
+                            <td th:text="${item.total}"></td>
+                            <td>
+                                <a class="btn btn-success" href="" th:href="@{/customer/detailtable/{id} (id=${item.id})}">Chi tiết</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span>tổng tiền : <b th:text="${sumtotal}"></b><span> VND</span></span>
+                <span>
+                    <form th:action="@{/paymentMethod}" method="post">
+                        <div class="mb-3">
+                            <select class="form-select" id="paymentMethod" name="paymentMethod">
+                                <option value="" selected disabled>Chọn Phương thức thanh toán</option>
+                                <option value="local">Thanh toán tại quán</option>
+                                <option value="momo">MoMo</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="id" value="">
+                        <input type="hidden" th:value="${sumtotal}" name="total">
+                        <input type="hidden" th:value="${idtable}" name="idtable">
+                        <button type="submit" class="btn btn-primary">Tiếp tục thanh toán</button>
+                    </form>
+                </span>
+
+                <div th:replace="layout :: bottom"></div>
+            </div>
+        </div>
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/sidebarmenu.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script src="/libs/simplebar/dist/simplebar.js"></script>
+
+
+</body>
+
+</html>

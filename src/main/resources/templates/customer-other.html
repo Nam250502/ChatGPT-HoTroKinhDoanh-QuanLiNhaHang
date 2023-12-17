@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="layout :: header"></div>
+
+            <!--  Header End -->
+            <div class="container col-md-6 mt-5">
+                <div class="card">
+                    <div class="card-header ">
+                        <div class="d-flex align-items-center ">
+                            <div class="m-2">
+                                <h4>Đơn Hàng</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <a class="btn btn-success w-100" th:href="@{/customer/viewtable/{id}(id=${idtable})}">Đơn hàng
+                            của tôi</a>
+                        <hr class="my-4">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header ">
+                        <div class="d-flex align-items-center ">
+                            <div class="m-2">
+                                <h4>Hỗ trợ</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+
+                        <input type="hidden" class="form-control" id="tableNumber" th:value="${idtable}">
+                        <div class="form-group">
+                            <textarea class="form-control" id="requestMessage" maxlength="300"></textarea>
+
+                        </div>
+                        <button class="btn btn-success w-100" onclick="sendHelpRequest()">Gửi</button>
+                        <div id="notification" text-success></div>
+                        <hr class="my-4">
+                        <a class="btn btn-success w-100">Về chúng tôi</a>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div th:replace="layout :: bottom"></div>
+    </div>
+    </div>
+
+    <script src="/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/sidebarmenu.js"></script>
+    <script src="/js/app.min.js"></script>
+    <script src="/libs/simplebar/dist/simplebar.js"></script>
+    <script>
+        function sendHelpRequest() {
+            var tableNumber = document.getElementById("tableNumber").value;
+            var requestMessage = document.getElementById("requestMessage").value;
+            document.getElementById("requestMessage").value = "";
+
+            if (tableNumber && requestMessage) {
+                var helpRequest = {
+                    tableNumber: tableNumber,
+                    message: requestMessage
+                };
+                $.ajax({
+                    type: "post",
+                    url: "/help/request-help",
+                    data: helpRequest,
+                    success: function(response) {}
+
+                });
+            }
+            alert("đã gửi yêu cầu thành công");
+        }
+    </script>
+
+</body>
+
+</html>

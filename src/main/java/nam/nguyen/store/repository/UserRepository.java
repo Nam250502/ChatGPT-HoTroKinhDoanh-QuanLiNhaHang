@@ -1,9 +1,11 @@
-package com.hutech.BEFoodStore.repository;
+package nam.nguyen.store.repository;
 
 
 
 
-import com.hutech.BEFoodStore.model.User;
+
+
+import nam.nguyen.store.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

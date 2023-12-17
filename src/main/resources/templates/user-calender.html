@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            margin-top: 50px;
+        }
+        
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+        }
+        
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .modal-header {
+            background-color: #007bff;
+            color: #fff;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+    </style>
+    <title>Lịch sự kiện</title>
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="stafflayout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div th:replace="stafflayout :: header"></div>
+            <!--  Header End -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Lịch làm</h5>
+                            </div>
+                            <div class="card-body h-25">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal thêm sự kiện -->
+                <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addEventModalLabel">Thêm sự kiện</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addEventForm">
+                                    <div class="form-group">
+                                        <label for="eventTitle">Thêm lịch làm</label>
+                                        <select id="selectEmployee" class="form-select" aria-label="Default select example">
+                                <option selected>Chọn nhân viên</option>
+                                <option th:each="item : ${users}" th:text="${item.name}" th:value="${item.username}">One</option>
+                              </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="eventDate">Ngày sự kiện</label>
+                                        <input type="date" class="form-control" id="eventDate" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Lưu sự kiện</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
+        <script src="/libs/jquery/dist/jquery.min.js"></script>
+        <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
+
+        <script>
+            $(document).ready(function() {
+                // Tạo đối tượng FullCalendar
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'agendaWeek' // Thay đổi thành 'agendaWeek'
+                    },
+                    defaultView: 'agendaWeek', // Hiển thị lịch theo tuần mặc định
+                    editable: false,
+                    events: '/user/calenderuser' // Đường dẫn API để lấy sự kiện từ máy chủ
+                });
+            });
+        </script>
+
+
+
+</body>
+
+</html>
