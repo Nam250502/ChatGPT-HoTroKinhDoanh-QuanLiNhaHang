@@ -58,9 +58,10 @@
                                                 <form action="#" th:action="@{/customer/updatecart}" method="POST" onsubmit="return validateForm(this);">
                                                     <input type="hidden" th:name="idtable" th:value="${idtable}">
                                                     <input type="hidden" th:name="idproduct" th:value="${item.product.id}">
-                                                    <input type="number" th:name="quantity" th:value="${item.quantity}" min="1" style="width:50px;">
+                                                    <input type="number" th:name="quantity" th:value="${item.quantity}" min="1" style="width:50px;" onchange="this.form.submit();">
                                                     <input type="submit" style="display: none;">
                                                 </form>
+
                                             </div>
 
                                         </div>
